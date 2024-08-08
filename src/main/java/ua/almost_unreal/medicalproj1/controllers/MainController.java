@@ -12,7 +12,7 @@ import ua.almost_unreal.medicalproj1.entity.Patient;
 public class MainController {
 
     private boolean acces=false;
-    private String password="2233";
+    private String password="2408";
     private String dir ="/html/main/";
     private final PatientDao patientDao;
 
