@@ -1,5 +1,6 @@
 package ua.almost_unreal.medicalproj1.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -18,10 +19,14 @@ public class MainController {
     public MainController(PatientDao patientDao) {
         this.patientDao = patientDao;
     }
+    private boolean checkUat(HttpSession session){
+        boolean acc=session.getAttribute("acces")!=null;
+        return acc;
+    }
 
     @GetMapping("/")
-    public String mainPage(Model model) {
-        if(acces==false) {
+    public String mainPage(Model model, HttpSession session) {
+        if(!checkUat(session)) {
             return "redirect:/login";
         }else{
             model.addAttribute("patients",patientDao.findAllUsers() );
@@ -33,9 +38,9 @@ public class MainController {
         return dir+"login";
     }
     @PostMapping("/login")
-    public String loginPost(@RequestParam String password, Model model) {
+    public String loginPost(@RequestParam String password, Model model, HttpSession session) {
         if(password.equals(this.password)){
-            acces=true;
+           session.setAttribute("acces",true);
             return "redirect:/";
         }else{
             model.addAttribute("mess","incorrect password");
@@ -45,7 +50,10 @@ public class MainController {
     }
 
     @GetMapping("/addPatient")
-    public String addPatient(Model model) {
+    public String addPatient(Model model, HttpSession session) {
+        if(!checkUat(session)) {
+            return "redirect:/login";
+        }
         model.addAttribute("patient", new Patient());
         return dir+"addPatient";
     }
@@ -56,7 +64,10 @@ public class MainController {
         return "redirect:/";
     }
     @GetMapping("/updatePatient/{id}")
-    public String updatePatient(@PathVariable long id, Model model) {
+    public String updatePatient(@PathVariable long id, Model model, HttpSession session) {
+        if(!checkUat(session)) {
+            return "redirect:/login";
+        }
         model.addAttribute("patient", patientDao.findById(id));
         return dir+"updatePatient";
     }
