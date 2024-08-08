@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients List</title>
+    <!-- Підключення CSS стилів -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>Patients List</h1>
+</header>
+
+<main>
+    <div class="container">
+        <form action="/addPatient" method="get" class="add-patient-form">
+            <button type="submit">Add Patient</button>
+        </form>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patient Name</th>
+                <th>Height</th>
+                <th>Weight</th>
+                <th>Special Patient ID</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="patient : ${patients}">
+                <td th:text="${patient.id}">ID</td>
+                <td><a th:href="@{/updatePatient/{id}(id=${patient.id})}" th:text="${patient.patient_name}"></a></td>
+                <td th:text="${patient.height}">Height</td>
+                <td th:text="${patient.weight}">Weight</td>
+                <td th:text="${patient.special_patient_id}">Special Patient ID</td>
+                <td>
+                    <form action="/deletePatient" method="post" class="delete-form">
+                        <input type="hidden" name="id" th:value="${patient.id}" />
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>
